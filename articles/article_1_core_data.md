@@ -1,5 +1,5 @@
 ---
-title: "[Swift] CoreData保存時にNSCFSet objectAtIndex unrecognized selector がでたときの解決方法"
+title: "[Xcode] NSCFSet objectAtIndex unrecognized selector の解決方法"
 emoji: "🙆"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [Swift,CoreData,XCode]
@@ -9,7 +9,7 @@ published: false
 ## Errorの内容
 CoreDataでリレーションを設定しているときに出現したError
 下記のようなリレーションをCoreDataで再現しようとした
-
+![](\/images/article_1/coredata_setting.png =250x)
 
 ## 発生した状況
 Listに紐づく,Reminderを設定しようとした際にクラッシュした
