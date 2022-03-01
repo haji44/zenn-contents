@@ -9,7 +9,7 @@ published: false
 ## Errorの内容
 CoreDataでリレーションを設定しているときに出現したError
 下記のようなリレーションをCoreDataで再現しようとした
-![](2022-02-28-22-53-09.png)
+
 
 ## 発生した状況
 Listに紐づく,Reminderを設定しようとした際にクラッシュした
@@ -33,8 +33,7 @@ https://developer.apple.com/documentation/foundation/nsorderedset
 
 ### 解決方法
 DataModelの設定から変更
-![]()
-buildして無事に動きました!!
 
-![](2022-02-28-22-44-11.png)
+
+buildして無事に動きました!!
 
