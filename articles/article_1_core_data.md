@@ -40,3 +40,4 @@ DataModelの設定から変更
 
 buildして無事に動きました!!
 
+gti
