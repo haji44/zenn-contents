@@ -84,3 +84,9 @@ ProjectのCloudKit Dashboardをクリックするとダッシュボードに遷�
 # まとめ
 初歩の初歩といった内容でしたが,これからCloudKitを使いたい方の理解の助けになれば幸いです.
 次はDataの登録からFetch処理までをまとめたいと思います.
+
+
+# 参考資料
+https://developer.apple.com/icloud/cloudkit/designing/
+
+https://www.youtube.com/watch?v=mXGg-iwZNUA
