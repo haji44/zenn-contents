@@ -26,7 +26,7 @@ FireBaseのその前に,Apple純正のBackend as a ServiceであるCloudkitを�
 * 料金表
 [![料金表](/images/article5/price.png)](https://blog.back4app.com/what-is-cloudkit)
 
-僕は実際にお試しで使う予定だったので,FireBaseなどGoogleのサービスを使うのをためらっていたので,無料で使用できるというのが結構決め手になりました.
+FireBaseなどGoogleのサービス料金知らないうちにかかってたらどうしようと思って,使うのをためらっていたので,無料で使用できるというのが結構決め手になりました.
 
 
 # CloudKitを利用する際の登場人物を紹介するぜ!
