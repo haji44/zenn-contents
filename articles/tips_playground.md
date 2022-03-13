@@ -8,7 +8,7 @@ published: true
 
 
 # Playground Markdown
-TutrialでよくPlaygroundがきれいにまとまっていて便利
+TutorialでよくPlaygroundがきれいにまとまっていて便利
 Combineの文法をメモするのに利用したいと思ったのでまとめる
 
 
