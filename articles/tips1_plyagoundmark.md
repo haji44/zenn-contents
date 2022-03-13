@@ -3,7 +3,7 @@ title: "Playground MarkdownのCheet sheetを作ってみた"
 emoji: "🤖"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["Swift","Playground","Xcode"]
-published: false
+published: true
 ---
 
 
@@ -79,7 +79,7 @@ There are just a few link types:
 
 * 新規ページの追加方法
 
-![](/images/tips1/2022-03-13-12-05-19.png=250x)
+![](/images/tips1/2022-03-13-12-05-19.png =10px)
 
 * ページの順序
 File Inspectorで並んでいる順で使う
@@ -96,7 +96,7 @@ Show Rendered Markupにキーボードショートカットを割り当てると
 例として,Header部分に実装する内容をスニペットに登録する
 
 * プレビューのイメージ
-![](2022-03-13-12-58-39.png)
+![](/images/tips1/imageHeader.png)
 * コード
 ```swift
 /*:
@@ -106,7 +106,7 @@ Show Rendered Markupにキーボードショートカットを割り当てると
 ```
 ### 作り方の手順
 1. 登録したいコードを選択した状態でCreate Code Snipetをチェックする
-![](/images/tips1/createsnipet.png)
+![](/images/tips1/createsnipet.png =250x)
 :::message alert
 コードを選択していないと新しく作成する画面に遷移しません!!
 必ず選択してからチェックしましょう!
