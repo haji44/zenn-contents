@@ -2,7 +2,7 @@
 title: "Swift CombineCocoa入門 UIKit編"
 emoji: "🦁"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["iOS","Combine","Swift","Reactive Programming"]
+topics: ["iOS","Combine","Swift","ReactiveProgramming"]
 published: false
 ---
 
@@ -27,7 +27,22 @@ https://github.com/CombineCommunity/CombineCocoa
 ## データのやり取りの確認
 今回は,入力した内容がラベルに反映されること
 ラベルの内容が,Switchの状態によって正負が反転するようになるということを条件にします
-<!-- TODO: ここにシークエンスダイアグラムを作る -->
+![](/images/article_combine/marblediagram.png)
+```mermaid
+sequenceDiagram
+    participant VC as ViewController 
+    participant VM as ViewModel
+    participant Model
+    
+    VC->>VM: Change numberSubject or switchSubject
+    VM->>VM: Detect change from numberSubject and Call updat(String, Bool)
+    VM->>Model: update(String, Bool)
+    Model->>Model: assign new value to number(Published)
+    Model->>VM: Imform update value
+    VM->>VC: Assing new value on UIcomponents
+```
+
+
 
 1. 数値の入力をPublishする
 2. Switchの状態を確認する

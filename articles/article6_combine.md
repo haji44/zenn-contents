@@ -11,6 +11,9 @@ Combineに入門したけど,Tutrialで知らないことがいっぱい出て�
 
 
 ## What is Stream?
+
+
+
 Streamとはユーザーによって生じたUI上のイベントや,ネットワークコールなどいろんな種類の非同期なデータのやり取りという感じ
 
 * 例
@@ -21,7 +24,7 @@ Streamとはユーザーによって生じたUI上のイベントや,ネット�
 
 
 
-## What is Seaquence?
+## What is Operation?
 * Seaquenceっていう
 
 Combine のOperationがどのような順番でStreamを処理するのかというのをまとめているもの
