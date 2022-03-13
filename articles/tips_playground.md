@@ -15,7 +15,7 @@ Combineの文法をメモするのに利用したいと思ったのでまとめ�
 サンプルのプロジェクトはこちらから
 https://github.com/haji44/PlaygroundCheet
 ## 有効にする方法
-Editro -> Show Renderd Markupをチェックする
+Editor -> Show Renderd Markupをチェックする
 MarkDownが認識される
 ![](/images/tips1/renderMark.png)
 
@@ -82,7 +82,7 @@ There are just a few link types:
 ![](/images/tips1/2022-03-13-12-05-19.png =10px)
 
 * ページの順序
-File Inspectorで並んでいる順で使う
+XcodeのFile Inspectorで並んでいる順序がページの並び順と一致している
 
 
 # Tips紹介のコーナー
