@@ -79,7 +79,7 @@ There are just a few link types:
 
 * 新規ページの追加方法
 
-![](/images/tips1/2022-03-13-12-05-19.png =10px)
+![](/images/tips1/addnewpage.png)
 
 * ページの順序
 XcodeのFile Inspectorで並んでいる順序がページの並び順と一致している
