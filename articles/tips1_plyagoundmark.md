@@ -3,7 +3,7 @@ title: "Playground MarkdownのCheet sheetを作ってみた"
 emoji: "🤖"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["Swift","Playground","Xcode"]
-published: true
+published: false
 ---
 
 
@@ -12,6 +12,8 @@ TutrialでよくPlaygroundがきれいにまとまっていて便利
 Combineの文法をメモするのに利用したいと思ったのでまとめる
 
 
+サンプルのプロジェクトはこちらから
+https://github.com/haji44/PlaygroundCheet
 ## 有効にする方法
 Editro -> Show Renderd Markupをチェックする
 MarkDownが認識される
