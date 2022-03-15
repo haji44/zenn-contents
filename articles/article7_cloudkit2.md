@@ -62,7 +62,7 @@ Querableを設定しなかった場合には,検索ができなくなるため,�
 ![](/images/article7/checkrecord.png)
 # CloudKitのデータを利用するための実装
 
-## 定義したModelの定義
+## Modelの定義
 先程の定義したRamenShopを扱うためのModelを定義します
 下記の3つの手順を行います.
 ```swift
