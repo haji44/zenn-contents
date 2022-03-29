@@ -9,10 +9,10 @@ published: false
 # HelthKitを使ってWatchOSで動かす!
 この記事では,運動時のデータをリアルタイムに記録するアプリをWatchOSで作成します. HelthKitは運動時のデータを管理するDBの役割を果たします.
 
-* 完成のイメージ
+## 完成のイメージ
 ![](/images/article8/finish.gif)
 
-* 画面の遷移のイメージ
+## 画面の遷移のイメージ
 ![](/images/article8/apparchitecture.png)
 
 * 使用するライブラリ
@@ -29,7 +29,7 @@ published: false
 # Viewのsetupをしてみる
 WatchOSのViewをMockデータをもとにじっそうしていきます. WatchOSはSwiftUIでレイアウトが組めます．今回は,AcitivityRingを除いてSwiftUIで実装をしていきます.
 
-## StartView 運動のタイプを選択
+# StartView (運動のタイプを選択する画面)
 測定するWorkoutのタイプをリスト表示をします.
 HKWorkoutActivityTypeは取得可能な運動のタイプを設定することが可能です.
 ```swift
@@ -75,8 +75,7 @@ extension HKWorkoutActivityType: Identifiable {
 }
 ```
 
-## アクティビティー中の表示画面の作成
-
+# PagingView (アクティビティー中の表示画面)
 WatchOSではアクティビティー中に特定操作をページごとに分けて実装を行うようにする.ページの実装はTabViewで簡単に可能!
 以下実装手順
 1. PageをEnumのCaseとして定義する
@@ -86,7 +85,6 @@ WatchOSではアクティビティー中に特定操作をページごとに分�
 TabViewを宣言しておくとWatchOS側でPageとして表示をしてくれます.
 ```swift
 struct SessionPagingView: View {
-
     @State private var selection: Tab = .metrics
 
     enum Tab {
@@ -103,26 +101,18 @@ struct SessionPagingView: View {
 }
 ```
 
-### 運動中のMetricsViewの作成
-
-Metricsがこの記事の肝です!
-HelthKitから取得したデータを表示する際には,異なる単位の値を適切にFormatterを掛ける必要があります.
-MesurementクラスからFormatを指定するのですがなかなか,直感的に理解するにはむずかしかったですね..
-実装時には下記の記事などが参考になりました.
+## 1.運動中のMetricsViewの作成
+Metricsがこの記事の肝です!HelthKitから取得したデータを表示する際には,異なる単位の値を適切にFormatterを掛ける必要があります.
+MesurementクラスからFormatを指定するのですがなかなか,直感的に理解するにはむずかしかったですね...実装時には下記の記事などが参考になりました.
 
 https://cocoacasts.com/swiftui-essentials-working-with-units-and-measurements-in-swiftui
 
 まずMesurementに表示したい値と単位を指定します. 
-![](2022-03-26-23-29-29.png)
 
-
-##  Summaryを表示するViewの作成
-
+## 2.運動終了後のSummaryを表示するViewの作成
 * 完成のイメージ
-Summaryを反映するイメージを作成する
 
-
-## AcitivityRingsを表示してみる
+## 3.AcitivityRingsを表示してみる
 
 ```swift
 import Foundation
@@ -152,7 +142,6 @@ struct ActivityRingsView: WKInterfaceObjectRepresentable {
     }
 
     func updateWKInterfaceObject(_ wkInterfaceObject: WKInterfaceObjectType, context: Context) {}
-    
 }
 ```
 AcitivityringのViewはWKInterfaceObjectRepresentableを使ってSwiftUIで使用する事ができます.
@@ -225,17 +214,12 @@ class WorkoutManager: NSObject, ObservableObject {
     }
 }
 ```
-
-
-
-
 # Projectの設定
 
 ## Capabiriltyの設定
 ![](/images/article8/infokey.png)
 
 ![](/images/article8/projectsetting.png)
-
 
 # Workoutmanager
 Extenstionの実装
