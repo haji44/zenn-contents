@@ -6,16 +6,32 @@ topics: ["WatchOS","HealthKit","Swift","Xcode"]
 published: false
 ---
 
-# HelthKitを使ってWatchKitで動かす!
-完成のイメージ
+# HelthKitを使ってWatchOSで動かす!
+この記事では,運動時のデータをリアルタイムに記録するアプリをWatchOSで作成します. HelthKitは運動時のデータを管理するDBの役割を果たします.
+
+* 完成のイメージ
+![](/images/article8/finish.gif)
+
+* 画面の遷移のイメージ
+![](/images/article8/apparchitecture.png)
+
+* 使用するライブラリ
+1. SwiftUI
+2. HelthKit
+
+# 実装手順
+1. SwiftUIのViewのset upとMockデータの挿入
+2. Acitivity Ringの作成
+3. HelthKitとのデータのやり取りを行うManagerClassの作成
+4. Mockデータをリプレイス
 
 
 # Viewのsetupをしてみる
-WatchOSのViewを組む
+WatchOSのViewをMockデータをもとにじっそうしていきます. WatchOSはSwiftUIでレイアウトが組めます．今回は,AcitivityRingを除いてSwiftUIで実装をしていきます.
 
-## 最初の画面
-測定するWorkOutのタイプをリスト表示をする
-
+## StartView 運動のタイプを選択
+測定するWorkoutのタイプをリスト表示をします.
+HKWorkoutActivityTypeは取得可能な運動のタイプを設定することが可能です.
 ```swift
 struct StartView: View {
     var workoutTypes: [HKWorkoutActivityType] = [.cycling, .running, .swimming]
@@ -23,7 +39,7 @@ struct StartView: View {
     var body: some View {
         List(workoutTypes) { workoutType in
             NavigationLink {
-                Text(workoutType.name)
+                Text(workoutType.name) // 
             } label: {
                 Text(workoutType.name)
             }
@@ -37,7 +53,7 @@ struct StartView: View {
 }
 ```
 
-HKWorkoutActivityTypeはEnumとしてcaseが定義されているため,List表示をするためにIdentifiableに適合して,各WorkOutの表示名を取得するComputedPropertyを定義しておく
+HKWorkoutActivityTypeのcaseをLabelに表示させるために,ComputedPropertyを定義します．また,SwiftUIのList表示を行うために,Identifiableに適合させます.
 ```swift
 extension HKWorkoutActivityType: Identifiable {
     public var id: UInt {
@@ -61,8 +77,7 @@ extension HKWorkoutActivityType: Identifiable {
 
 ## アクティビティー中の表示画面の作成
 
-WatchOSではアクティビティー中に特定操作をページごとに分けて実装を行うようにする
-ページの実装はTabViewで簡単に可能!
+WatchOSではアクティビティー中に特定操作をページごとに分けて実装を行うようにする.ページの実装はTabViewで簡単に可能!
 以下実装手順
 1. PageをEnumのCaseとして定義する
 2. @Stateで最初に表示するTabを宣言
@@ -86,7 +101,6 @@ struct SessionPagingView: View {
         }
     }
 }
-
 ```
 
 ### 運動中のMetricsViewの作成
@@ -168,7 +182,6 @@ let query = HKActivitySummaryQuery(predicate: predicate) { query, summaries, ero
 
 
 ## DataのFlow
-
 HealthKitで取得したデータをViewに反映するまでは下記のような流れでデータのやり取りをします
 
 
