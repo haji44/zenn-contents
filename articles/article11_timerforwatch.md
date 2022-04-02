@@ -1,8 +1,8 @@
 ---
-title: "Swift Timerの秒以下の単位を表示させる方法"
+title: "SwiftUI Timerの秒以下の単位を表示させる方法"
 emoji: "👌"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["Swfit","Xcode"]
+topics: ["Swfit","Xcode","SwiftUI"]
 published: true
 ---
 
