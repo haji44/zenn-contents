@@ -8,6 +8,7 @@ published: false
 
 # HelthKitを使ってWatchOSで動かす!
 この記事では,運動時のデータをリアルタイムに記録するアプリをWatchOSで作成します. HelthKitは運動時のデータを管理するDBの役割を果たします.
+実装の内容は,WWDCのWorkoutアプリを開発するセッションをもとにしています.
 
 ## 完成のイメージ
 ![](/images/article8/finish.gif)
@@ -33,6 +34,9 @@ WatchOSのViewをMockデータをもとにじっそうしていきます. WatchO
 測定するWorkoutのタイプをリスト表示をします.
 HKWorkoutActivityTypeは取得可能な運動のタイプを設定することが可能です.
 ```swift
+import SwiftUI
+import HealthKit
+
 struct StartView: View {
     var workoutTypes: [HKWorkoutActivityType] = [.cycling, .running, .swimming]
 
@@ -54,6 +58,7 @@ struct StartView: View {
 ```
 
 HKWorkoutActivityTypeのcaseをLabelに表示させるために,ComputedPropertyを定義します．また,SwiftUIのList表示を行うために,Identifiableに適合させます.
+今回は,サンプルのためにextensionで実装しますが,実際のプロジェクトでは影響範囲を鑑みてインスタンスに切り出すなどをしたほうが良いでしょう.
 ```swift
 extension HKWorkoutActivityType: Identifiable {
     public var id: UInt {
@@ -76,14 +81,18 @@ extension HKWorkoutActivityType: Identifiable {
 ```
 
 # PagingView (アクティビティー中の表示画面)
-WatchOSではアクティビティー中に特定操作をページごとに分けて実装を行うようにする.ページの実装はTabViewで簡単に可能!
+WatchOSではアクティビティー中に特定操作をページごとに分けて実装を行うようにします.
 以下実装手順
-1. PageをEnumのCaseとして定義する
-2. @Stateで最初に表示するTabを宣言
-3. TabViewのselectionをBindingする
+1. 切り替えるPageをEnumのCaseとして定義する
+2. @Stateで変更があるたびにViewが変更されるようにする
+3. TabViewでselectionをBindingする
 
-TabViewを宣言しておくとWatchOS側でPageとして表示をしてくれます.
+WatchOSでは,TabViewを宣言しておくとWatchOS側でPageとして表示処理をしてくれます.
+
 ```swift
+import SwiftUI
+import WatchKit
+
 struct SessionPagingView: View {
     @State private var selection: Tab = .metrics
 
@@ -93,24 +102,100 @@ struct SessionPagingView: View {
 
     var body: some View {
         TabView(selection: $selection) {
-            Text("Controls").tag(Tab.control)
-            Text("Metrics").tag(Tab.metrics)
-            Text("Now Plyaing").tag(Tab.nowPlaying)
+            ControlsView().tag(Tab.control) // 運動の終了および
+            MetricsView().tag(Tab.metrics) // 運動中の心拍数などの情報を表示する
+            NowPlayingView().tag(Tab.nowPlaying) // 音楽Playerを表示する(WatchKitKitが必須となる)
         }
     }
 }
 ```
 
-## 1.運動中のMetricsViewの作成
-Metricsがこの記事の肝です!HelthKitから取得したデータを表示する際には,異なる単位の値を適切にFormatterを掛ける必要があります.
-MesurementクラスからFormatを指定するのですがなかなか,直感的に理解するにはむずかしかったですね...実装時には下記の記事などが参考になりました.
+## 1.MetricsView(運動中の消費カロリー等の詳細情報の画面の作成)
+今回の肝であるリアルタイムにデータを取得して表示する画面を実装します. 
+表示するデータの項目は, ①心拍数,②距離,③運動時間,④消費カロリーとします.
 
+MesurementViewの構成要素は,Timerとそれぞれの指標を表示するTextで構成します.
+Timerの実装は別Viewで切り出します. 
+
+1. 各指標の実装
+距離や消費カロリーは,それぞれをMesurementで,適した単位などで実装するようにします. 
+MesurementクラスからFormatを指定する際には,実装時には下記の記事などが参考になりました.
 https://cocoacasts.com/swiftui-essentials-working-with-units-and-measurements-in-swiftui
 
-まずMesurementに表示したい値と単位を指定します. 
+```swift
+import SwiftUI
+
+struct MetricsView: View {
+    @EnvironmentObject var workoutManager: WorkoutManager
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            // mm秒まで表示する運動時間を表示するView
+            ElapsedTimeView(elapsedTime: workoutManager.builder?.elapsedTime ?? 0, showSubseconds: context.cadence == .live)
+                    .foregroundStyle(.yellow)
+            // 消費カロリー
+            Text(Measurement(value: 47, unit: UnitEnergy.kilocalories)
+                        .formatted(.measurement(width: .abbreviated, usage: .workout, numberFormatStyle: .number.precision(.fractionLength(0)))))
+            // 心拍数                        
+            Text( 153.formatted(.number.precision(.fractionLength(0))) + " bpm")
+            // 移動距離
+            Text(Measurement(value: 800, unit: UnitLength.meters).formatted(.measurement(width: .abbreviated, usage: .road)))
+        }
+    }
+}
+```
+経過時間を表示するViewは,Formatterを利用して「分:秒:mm秒」の形式で画面に表示をさせます.
+ViewのObjectで,経過時間をTimeIntervalで保持し,ElapesedTImeFormatterクラスでフォーマットの形式を指定します. 
+```swift
+import SwiftUI
+
+struct ElapesdTimeView: View {
+    var elapedTime: TimeInterval = 0
+    var showSubseconds: Bool = true
+    @State private var timeFormatter = ElapesedTImeFormatter()
+
+    var body: some View {
+        Text(NSNumber(value: elapedTime), formatter: timeFormatter)
+            .fontWeight(.semibold)
+            .onChange(of: showSubseconds) {
+                timeFormatter.showSubseconds = $0
+            }
+    }
+}
+
+class ElapesedTImeFormatter: Formatter {
+    let componentFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    var showSubseconds = true
+
+    override func string(for obj: Any?) -> String? {
+
+        guard let time = obj as? TimeInterval else { return nil }
+
+        guard let formattedString = componentFormatter.string(from: time) else {
+            return nil
+        }
+
+        if showSubseconds {
+            let hunredths = Int((time.truncatingRemainder(dividingBy: 1)) * 100)
+            let decimalSperator = Locale.current.decimalSeparator ?? "."
+            return String(format: "%@%@%0.2d", formattedString, decimalSperator, hunredths)
+        }
+        return formattedString
+    }
+
+}
+```
+
+
 
 ## 2.運動終了後のSummaryを表示するViewの作成
-* 完成のイメージ
+
 
 ## 3.AcitivityRingsを表示してみる
 
@@ -144,7 +229,11 @@ struct ActivityRingsView: WKInterfaceObjectRepresentable {
     func updateWKInterfaceObject(_ wkInterfaceObject: WKInterfaceObjectType, context: Context) {}
 }
 ```
-AcitivityringのViewはWKInterfaceObjectRepresentableを使ってSwiftUIで使用する事ができます.
+
+
+
+
+Acitivityringは,WKInterfaceObjectRepresentableを使ってSwiftUIで使用する事ができます.
 Acitivityの情報はHelthKitから取得をする必要があるので,HelthKitのDatabaseにアクセスして,その結果をacitivityの結果に入れるようにします.
 * HelthKitからデータを取得する手順
 1. 取得する対象の日付を決める
@@ -171,12 +260,10 @@ let query = HKActivitySummaryQuery(predicate: predicate) { query, summaries, ero
 
 
 ## DataのFlow
-HealthKitで取得したデータをViewに反映するまでは下記のような流れでデータのやり取りをします
-
+HealthKitで取得したデータをViewに反映するまでは下記のような流れでデータのやり取りをします. 
 
 ## WorkoutManagerを作成
-このクラスでは,Workoutのタイプに応じて記録開始時点のデータを特定することができます
-
+このクラスでは,Workoutのタイプに応じて記録開始時点のデータを特定することができます. 
 
 ```swift
 import Foundation
@@ -225,7 +312,6 @@ class WorkoutManager: NSObject, ObservableObject {
 Extenstionの実装
 ```swift
 extension WorkoutManager: HKWorkoutSessionDelegate {
-
     // Tells the delegate that the session’s state has changed.
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
         DispatchQueue.main.async {
@@ -258,7 +344,7 @@ extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
         }
     }
     // Tells the delegate that a new event has been added to the builder.
-    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {    }
+    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) { }
 }
 ```
 HKWorkoutSessionDelegate SessionのStatusが変化したときに,呼ばれる
@@ -296,5 +382,3 @@ struct MetricsView: View {
     }
 }
 ```
-
-
