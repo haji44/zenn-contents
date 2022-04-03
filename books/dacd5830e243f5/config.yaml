@@ -1,0 +1,11 @@
+title: "WathcOS 入門 HealthKitでRealtimeに運動を記録!!"
+summary: "この記事では,運動時のデータをリアルタイムに記録するアプリをWatchOSで作成します. 
+リアルタイムなデータの更新,取得はHKWorkoutSessionを利用することができます. "
+topics: ["SwiftUI","WatchOS","HealthKit","Swift","Xcode"]
+published: false
+price: 0 # 有料の場合200〜5000
+# 本に含めるチャプターを順番に並べましょう
+chapters:
+  - start
+  - section_1_setupview
+  - section_2_workoutmanager
