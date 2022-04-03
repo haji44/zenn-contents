@@ -1,5 +1,5 @@
 ---
-title: "SwiftUI Timerの秒以下の単位を表示させる方法"
+title: "SwiftUI mm秒単位で時間を表示させる方法"
 emoji: "👌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Swfit","Xcode","SwiftUI"]
