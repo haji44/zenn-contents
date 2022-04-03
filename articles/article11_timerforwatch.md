@@ -87,6 +87,7 @@ Text(NSNumber(value: timeInterval), formatter: formatter)
 ```
 * Formatterのかけ方
 valueにはNSObjectを継承したObjectである必要があります. formatterはFormatterクラスを継承したTimerFormatterを渡します．
+
 https://swiftontap.com/text/init(_:formatter:)-54e07
 
 * Fontの指定
@@ -98,7 +99,7 @@ Fontの指定もしくは,Textの位置を左寄せにするなどしない場�
 https://omochiblog.com/2021/01/31/swiftui-sf-monospace/
 
 Fontの指定でこのように表示位置が固定されます
-![](https://github.com/haji44/TimerViewSampel/blob/main/Simulator%20Screen%20Recording%20-%20iPhone%2012%20-%202022-04-02%20at%2021.09.09.gif)
+![](/images/article11/timerFinish.gif)
 
 
 全体のコード

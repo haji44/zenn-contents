@@ -145,7 +145,11 @@ struct MetricsView: View {
 }
 ```
 経過時間を表示するViewは,Formatterを利用して「分:秒:mm秒」の形式で画面に表示をさせます.
-ViewのObjectで,経過時間をTimeIntervalで保持し,ElapesedTImeFormatterクラスでフォーマットの形式を指定します. 
+こちらの実装は,こちらに記載しております.
+
+https://zenn.dev/jime/articles/article11_timerforwatch
+
+経過時間を表示するViewの実装内容
 ```swift
 import SwiftUI
 
@@ -192,12 +196,80 @@ class ElapesedTImeFormatter: Formatter {
 }
 ```
 
+## 2. 運動の中断,終了を選択するView
 
 
-## 2.運動終了後のSummaryを表示するViewの作成
 
 
-## 3.AcitivityRingsを表示してみる
+
+# 運動終了後のSummaryを表示するViewの作成
+運動終了後に表示するSummaryViewを作成します. 
+MetricsViewと同様にMesurementでデータの単位を指定します. 
+
+```swift
+import SwiftUI
+import HealthKit
+
+struct SummaryView: View {
+    @Environment(\.dismiss) var dismiss
+    @State private var durationFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    var body: some View {
+        ScrollView(.vertical, showsIndicators: true) {
+            VStack(alignment: .leading) {
+                SummaryMetricView(title: "Total Time", value: durationFormatter.string(from: 30 * 60 ) ?? "")
+                    .accentColor(.yellow)
+                SummaryMetricView(title: "Total Distance",
+                                  value: Measurement(value: 1624, unit: UnitLength.meters).formatted(
+                                    .measurement(width: .abbreviated, usage: .road)
+                                  ))
+                    .accentColor(.yellow)
+                SummaryMetricView(title: "Total Calories",
+                                  value: Measurement(value: 332, unit: UnitEnergy.kilocalories).formatted(
+                                    .measurement(width: .abbreviated, usage: .workout, numberFormatStyle: .number.precision(.fractionLength(0)))
+                                  ))
+                    .accentColor(.pink)
+                SummaryMetricView(title: "Avg Heart Rate",
+                                  value: 154.formatted() + "bpm")
+                .accentColor(Color.red)
+                Text("Acitivity Rings")
+                ActivityRingsView(healthStore: HKHealthStore())
+                    .frame(width: 50, height: 50)
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Done")
+                }
+            }
+            .scenePadding()
+        }
+        .navigationTitle("Summary")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// 各指標のViewComponents
+struct SummaryMetricView: View {
+    var title: String
+    var value: String
+
+    var body: some View {
+        Text(title)
+            .foregroundStyle(.foreground)
+        Text(value)
+            .font(.system(.title2, design: .rounded).lowercaseSmallCaps())
+        Divider()
+    }
+}
+
+```
+
+# AcitivityRingsを表示してみる
 
 ```swift
 import Foundation
@@ -229,9 +301,6 @@ struct ActivityRingsView: WKInterfaceObjectRepresentable {
     func updateWKInterfaceObject(_ wkInterfaceObject: WKInterfaceObjectType, context: Context) {}
 }
 ```
-
-
-
 
 Acitivityringは,WKInterfaceObjectRepresentableを使ってSwiftUIで使用する事ができます.
 Acitivityの情報はHelthKitから取得をする必要があるので,HelthKitのDatabaseにアクセスして,その結果をacitivityの結果に入れるようにします.
