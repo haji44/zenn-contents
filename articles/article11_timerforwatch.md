@@ -96,6 +96,10 @@ Fontの指定もしくは,Textの位置を左寄せにするなどしない場�
 これを防ぐために,monospacedDigitSystemFontを指定します. 
 https://omochiblog.com/2021/01/31/swiftui-sf-monospace/
 
+Fontの指定でこのように表示位置が固定されます
+![](https://github.com/haji44/TimerViewSampel/blob/main/Simulator%20Screen%20Recording%20-%20iPhone%2012%20-%202022-04-02%20at%2021.09.09.gif)
+
+
 全体のコード
 ```swift
 import SwiftUI
